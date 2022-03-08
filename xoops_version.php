@@ -23,19 +23,19 @@ use XoopsModules\About\Utility;
 
 require_once __DIR__ . '/preloads/autoloader.php';
 
-$moduleDirName      = basename(__DIR__);
+$moduleDirName = basename(__DIR__);
 $moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
-$modversion['version']             = '1.7.0';
-$modversion['module_status']       = 'Beta 1';
-$modversion['release_date']        = '2021/01/26';
-$modversion['name']                = _MI_ABOUT_NAME;
-$modversion['description']         = _MI_ABOUT_DESC;
-$modversion['author']              = 'Magic.Shao, ezsky, Mamba, Zyspec';
-$modversion['credits']             = 'xoops.org.cn';
-$modversion['help']                = 'page=help';
-$modversion['license']             = 'GNU GPL 2.0 or later';
-$modversion['license_url']         = 'www.gnu.org/licenses/gpl-2.0.html';
+$modversion['version']       = '1.7.0';
+$modversion['module_status'] = 'Beta 3';
+$modversion['release_date']  = '2022/03/07';
+$modversion['name']          = _MI_ABOUT_NAME;
+$modversion['description']   = _MI_ABOUT_DESC;
+$modversion['author']        = 'Magic.Shao, ezsky, Mamba, Zyspec';
+$modversion['credits']       = 'xoops.org.cn';
+$modversion['help']          = 'page=help';
+$modversion['license']       = 'GNU GPL 2.0 or later';
+$modversion['license_url']   = 'www.gnu.org/licenses/gpl-2.0.html';
 $modversion['dirname']             = $moduleDirName;
 $modversion['modicons16']          = 'assets/images/icons/16';
 $modversion['modicons32']          = 'assets/images/icons/32';
@@ -45,11 +45,13 @@ $modversion['min_php']             = '7.4';
 $modversion['min_xoops']           = '2.5.10';
 $modversion['min_admin']           = '1.2';
 $modversion['min_db']              = ['mysql' => '5.5'];
-$modversion['image']               = 'assets/images/logoModule.png';
-$modversion['hasAdmin']            = 1;
-$modversion['system_menu']         = 1;
-$modversion['adminindex']          = 'admin/index.php';
-$modversion['adminmenu']           = 'admin/menu.php';
+
+$modversion['image'] = 'assets/images/logoModule.png';
+$modversion['hasAdmin']    = 1;
+$modversion['system_menu'] = 1;
+$modversion['adminindex']  = 'admin/index.php';
+$modversion['adminmenu']   = 'admin/menu.php';
+
 // Is performing module install/update?
 $isModuleAction            = (!empty($_POST['fct']) && 'modulesadmin' === $_POST['fct']);
 $modversion['onInstall']   = 'include/action.module.php';
@@ -66,7 +68,7 @@ $modversion['tables']           = ['about_page',];
 
 // ------------------- Templates ------------------- //
 if ($isModuleAction) {
-    //    require_once __DIR__ . '/include/functions.render.php';
+//    require_once __DIR__ . '/include/functions.render.php';
     $modversion['templates'] = &Utility::getTplPageList('', true);
 }
 
