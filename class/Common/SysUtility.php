@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace XoopsModules\About\Common;
 
@@ -16,21 +16,13 @@ namespace XoopsModules\About\Common;
  */
 
 /**
- *
  * @license      https://www.fsf.org/copyleft/gpl.html GNU public license
  * @copyright    https://xoops.org 2000-2020 &copy; XOOPS Project
  * @author       ZySpec <zyspec@yahoo.com>
  * @author       Mamba <mambax7@gmail.com>
  */
 
-use MyTextSanitizer;
-use XoopsFormDhtmlTextArea;
-use XoopsFormEditor;
-use XoopsFormTextArea;
-use XoopsModules\About;
 use XoopsModules\About\Helper;
-
-
 
 /**
  * Class SysUtility
@@ -62,7 +54,7 @@ class SysUtility
      *
      * @return string Trimmed string.
      */
-    public static function truncateHtml($text, $length = 100, $ending = '...', $exact = false, $considerHtml = true)
+    public static function truncateHtml(string $text, int $length = 100, string $ending = '...', bool $exact = false, bool $considerHtml = true): string
     {
         if ($considerHtml) {
             // if the plain text is shorter than the maximum length, return the whole text
@@ -90,7 +82,7 @@ class SysUtility
                         // if tag is an opening tag
                     } elseif (\preg_match('/^<\s*([^\s>!]+).*?' . '>$/s', $line_matchings[1], $tag_matchings)) {
                         // add tag to the beginning of $open_tags list
-                        \array_unshift($open_tags, mb_strtolower($tag_matchings[1]));
+                        \array_unshift($open_tags, \mb_strtolower($tag_matchings[1]));
                     }
                     // add html-tag to $truncate'd text
                     $truncate .= $line_matchings[1];
@@ -102,7 +94,7 @@ class SysUtility
                     $left            = $length - $total_length;
                     $entities_length = 0;
                     // search for html entities
-                    if (\preg_match_all('/&[0-9a-z]{2,8};|&#\d{1,7};|[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE)) {
+                    if (\preg_match_all('/&[0-9a-z]{2,8};|&#\d{1,7};|[0-9a-f]{1,6};/i', $line_matchings[2], $entities, \PREG_OFFSET_CAPTURE)) {
                         // calculate the real length of all entities in the legal range
                         foreach ($entities[0] as $entity) {
                             if ($left >= $entity[1] + 1 - $entities_length) {
@@ -154,11 +146,11 @@ class SysUtility
     }
 
     /**
-     * @param \Xmf\Module\Helper $helper
-     * @param array|null         $options
+     * @param \Xmf\Module\Helper|null $helper
+     * @param array|null              $options
      * @return \XoopsFormDhtmlTextArea|\XoopsFormEditor
      */
-    public static function getEditor($helper = null, $options = null)
+    public static function getEditor(\Xmf\Module\Helper $helper = null, array $options = null)
     {
         /** @var Helper $helper */
         if (null === $options) {
@@ -193,12 +185,11 @@ class SysUtility
     }
 
     /**
-     * @param $fieldname
-     * @param $table
-     *
+     * @param string $fieldname
+     * @param string $table
      * @return bool
      */
-    public function fieldExists($fieldname, $table)
+    public static function fieldExists(string $fieldname, string $table): bool
     {
         global $xoopsDB;
         $result = $xoopsDB->queryF("SHOW COLUMNS FROM   $table LIKE '$fieldname'");
@@ -211,23 +202,66 @@ class SysUtility
      * @param int          $id_field
      * @param int          $id
      *
-     * @return mixed
+     * @return false|void
      */
-    public static function cloneRecord($tableName, $id_field, $id)
+    public static function cloneRecord($tableName, int $id_field, int $id)
     {
         $new_id = false;
         $table  = $GLOBALS['xoopsDB']->prefix($tableName);
         // copy content of the record you wish to clone
-        $tempTable = $GLOBALS['xoopsDB']->fetchArray($GLOBALS['xoopsDB']->query("SELECT * FROM $table WHERE $id_field='$id' "), MYSQLI_ASSOC) or exit('Could not select record');
+        $tempTable = $GLOBALS['xoopsDB']->fetchArray($GLOBALS['xoopsDB']->query("SELECT * FROM $table WHERE $id_field='$id' "), \MYSQLI_ASSOC) or exit('Could not select record');
         // set the auto-incremented id's value to blank.
         unset($tempTable[$id_field]);
         // insert cloned copy of the original  record
-        $result = $GLOBALS['xoopsDB']->queryF("INSERT INTO $table (" . implode(', ', array_keys($tempTable)) . ") VALUES ('" . implode("', '", $tempTable) . "')") or exit ($GLOBALS['xoopsDB']->error());
+        $result = $GLOBALS['xoopsDB']->queryF("INSERT INTO $table (" . \implode(', ', \array_keys($tempTable)) . ") VALUES ('" . \implode("', '", $tempTable) . "')") or exit($GLOBALS['xoopsDB']->error());
 
         if ($result) {
             // Return the new id
             $new_id = $GLOBALS['xoopsDB']->getInsertId();
         }
+
         return $new_id;
+    }
+
+    /**
+     * Function responsible for checking if a directory exists, we can also write in and create an index.html file
+     *
+     * @param string $folder The full path of the directory to check
+     */
+    public static function prepareFolder(string $folder): void
+    {
+        try {
+            if (!@\mkdir($folder) && !\is_dir($folder)) {
+                throw new \RuntimeException(\sprintf('Unable to create the %s directory', $folder));
+            }
+            file_put_contents($folder . '/index.html', '<script>history.go(-1);</script>');
+        } catch (\Throwable $e) {
+            echo 'Caught exception: ', $e->getMessage(), "\n", '<br>';
+        }
+    }
+
+    /**
+     * @param string $tablename
+     *
+     * @return bool
+     */
+    public static function tableExists(string $tablename): bool
+    {
+        $result = $GLOBALS['xoopsDB']->queryF("SHOW TABLES LIKE '$tablename'");
+
+        return $GLOBALS['xoopsDB']->getRowsNum($result) > 0;
+    }
+
+    /**
+     * @param $field
+     * @param $table
+     * @return mixed
+     */
+    public static function addField($field, $table)
+    {
+        global $xoopsDB;
+        $result = $xoopsDB->queryF('ALTER TABLE ' . $table . " ADD $field;");
+
+        return $result;
     }
 }

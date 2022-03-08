@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace XoopsModules\About;
-
-
 
 require_once XOOPS_ROOT_PATH . '/class/tree.php';
 
@@ -24,12 +22,12 @@ if (!\class_exists('About\Tree')) {
 
         /**
          * @param            $key
-         * @param            $ret
+         * @param mixed      $ret
          * @param            $prefix_orig
          * @param string     $prefix_curr
-         * @param null|array $tags
-         */
-        public function makeTreeItems($key, &$ret, $prefix_orig, $prefix_curr = '', $tags = null)
+         * @param array|null $tags
+          */
+        public function makeTreeItems($key, &$ret, $prefix_orig, string $prefix_curr = '', array $tags = null): void
         {
             if ($key > 0) {
                 if ($tags && \is_array($tags)) {
@@ -55,7 +53,7 @@ if (!\class_exists('About\Tree')) {
          * @param null   $tags
          * @return array
          */
-        public function &makeTree($prefix = '-', $key = 0, $tags = null)
+        public function &makeTree(string $prefix = '-', int $key = 0, $tags = null): array
         {
             $ret = [];
             $this->makeTreeItems($key, $ret, $prefix, '', $tags);
@@ -81,7 +79,7 @@ if (!\class_exists('About\Tree')) {
             $addEmptyOption = false,
             $key = 0,
             $extra = ''
-        ) {
+        ): string {
             $ret = '<select name=' . $name . '>';
             if (!empty($addEmptyOption)) {
                 $ret .= '<option value="0">' . (\is_string($addEmptyOption) ? $addEmptyOption : '') . '</option>';
@@ -94,11 +92,11 @@ if (!\class_exists('About\Tree')) {
 
         /**
          * @param       $key
-         * @param       $ret
+         * @param mixed $ret
          * @param array $tags
          * @param int   $depth
          */
-        public function getAllChildArray($key, &$ret, $tags = [], $depth = 0)
+        public function getAllChildArray($key, &$ret, array $tags = [], int $depth = 0): void
         {
             if (0 == --$depth) {
                 return;
@@ -106,7 +104,7 @@ if (!\class_exists('About\Tree')) {
 
             if (isset($this->tree[$key]['child'])) {
                 foreach ($this->tree[$key]['child'] as $childkey) {
-                    if (isset($this->tree[$childkey]['obj'])):
+                    if (isset($this->tree[$childkey]['obj'])) :
                         if ($tags && \is_array($tags)) {
                             foreach ($tags as $tag) {
                                 $ret['child'][$childkey][$tag] = $this->tree[$childkey]['obj']->getVar($tag);
@@ -127,7 +125,7 @@ if (!\class_exists('About\Tree')) {
          * @param int  $depth
          * @return array
          */
-        public function makeArrayTree($key = 0, $tags = null, $depth = 0)
+        public function makeArrayTree(int $key = 0, $tags = null, int $depth = 0): array
         {
             $ret = [];
             if ($depth > 0) {

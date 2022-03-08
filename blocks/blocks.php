@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
  * About
  *
@@ -9,10 +10,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
+ * @copyright      The XOOPS Co.Ltd. https://www.xoops.com.cn
  * @copyright      XOOPS Project (https://xoops.org)
- * @license        GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
- * @package        about
+ * @license        GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
@@ -22,14 +22,13 @@ use XoopsModules\About\Constants;
 use XoopsModules\About\Helper;
 
 /** @var Helper $helper */
-
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 /**
- * @return mixed
+ * @return array
  */
-function about_block_menu_show()
+function about_block_menu_show(): array
 {
-    $moduleDirName = basename(dirname(__DIR__));
+    $moduleDirName = \basename(\dirname(__DIR__));
 
     $helper        = Helper::getInstance();
     $pageHandler   = $helper->getHandler('Page');
@@ -62,8 +61,8 @@ function about_block_page_show($options)
     if (empty($options[0])) {
         return false;
     }
-    $moduleDirName = basename(dirname(__DIR__));
-    $helper = Helper::getInstance();
+    $moduleDirName = \basename(\dirname(__DIR__));
+    $helper        = Helper::getInstance();
 
     $myts        = \MyTextSanitizer::getInstance();
     $block       = [];
@@ -76,12 +75,12 @@ function about_block_page_show($options)
     if ($options[1] > 0) {
         $url        = $helper->url("index.php?page_id={$options[0]}");
         $trimmarker = <<<EOF
-<a href="{$url}" class="more">{$options[2]}</a>
-EOF;
+            <a href="{$url}" class="more">{$options[2]}</a>
+            EOF;
         $page_text  = xoops_substr($page_text, 0, $options[1]) . $trimmarker;
     }
 
-    $block['page_text']  = $myts->nl2br($page_text);
+    $block['page_text']  = $myts->nl2Br($page_text);
     $block['page_image'] = 1 == $options[3] ? $helper->url($page->getVar('page_image', 's')) : '';
 
     return $block;
@@ -91,11 +90,11 @@ EOF;
  * @param $options
  * @return string
  */
-function about_block_page_edit($options)
+function about_block_page_edit($options): string
 {
-    $moduleDirName = basename(dirname(__DIR__));
-    $helper       = Helper::getInstance();
-    $options_page = [];
+    $moduleDirName = \basename(\dirname(__DIR__));
+    $helper        = Helper::getInstance();
+    $options_page  = [];
 
     $helper->loadLanguage('blocks');
     $pageHandler = $helper->getHandler('Page');
@@ -111,7 +110,7 @@ function about_block_page_edit($options)
         $page_title       = '<a href="' . $helper->url("index.php?page_id={$k}") . '" target="_blank">' . $v['page_title'] . '</a>';
         $options_page[$k] = empty($v['page_image']) ? $page_title : $page_title . '<img src="' . $helper->url('assets/images/picture.png') . '">';
     }
-    //    require_once dirname(__DIR__) . '/include/xoopsformloader.php';
+    //    require_once \dirname(__DIR__) . '/include/xoopsformloader.php';
     xoops_load('blockform', $moduleDirName);
     $form        = new XoopsModules\About\BlockForm();
     $page_select = new \XoopsFormRadio(_MB_ABOUT_BLOCKPAGE, 'options[0]', $options[0], '<br>');

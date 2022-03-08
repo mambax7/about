@@ -1,12 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
-use XoopsModules\About;
 use XoopsModules\About\Helper;
 use XoopsModules\About\Utility;
 
-    /** @var Helper $helper */
-    /** @var Utility $utility */
-
+/** @var Helper $helper */
+/** @var Utility $utility */
 defined('XOOPS_ROOT_PATH') || exit('Restricted access');
 
 /**
@@ -16,9 +14,9 @@ defined('XOOPS_ROOT_PATH') || exit('Restricted access');
  *
  * @return bool       true if ready to install, false if not
  */
-function xoops_module_pre_install_about(\XoopsModule $module)
+function xoops_module_pre_install_about(\XoopsModule $module): bool
 {
-    require_once dirname(__DIR__) . '/preloads/autoloader.php';
+    require_once \dirname(__DIR__) . '/preloads/autoloader.php';
     $utility      = new Utility();
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
@@ -37,7 +35,7 @@ function xoops_module_pre_install_about(\XoopsModule $module)
  * @param \XoopsModule $module
  * @return bool        true if install successful, false if not
  */
-function xoops_module_install_about(\XoopsModule $module)
+function xoops_module_install_about(\XoopsModule $module): bool
 {
     $success   = true;
     $data_file = XOOPS_ROOT_PATH . '/modules/about/sql/mysql.about.sql';
@@ -82,11 +80,11 @@ function xoops_module_install_about(\XoopsModule $module)
  *
  * @return bool       true if ready to install, false if not
  */
-function xoops_module_pre_update_about(\XoopsModule $module)
+function xoops_module_pre_update_about(\XoopsModule $module): bool
 {
-    $moduleDirName = basename(dirname(__DIR__));
-    $helper  = Helper::getInstance();
-    $utility = new Utility();
+    $moduleDirName = \basename(\dirname(__DIR__));
+    $helper        = Helper::getInstance();
+    $utility       = new Utility();
 
     $xoopsSuccess = $utility::checkVerXoops($module);
     $phpSuccess   = $utility::checkVerPhp($module);
@@ -99,7 +97,7 @@ function xoops_module_pre_update_about(\XoopsModule $module)
  * @param null        $prev_version
  * @return bool        true if update successful, false if not
  */
-function xoops_module_update_about(\XoopsModule $module, $prev_version = null)
+function xoops_module_update_about(\XoopsModule $module, $prev_version = null): bool
 {
     $success = true;
     // Delete files from previous version (if they exist)
@@ -151,12 +149,13 @@ function xoops_module_update_about(\XoopsModule $module, $prev_version = null)
  * @param \XoopsModule $module
  *
  * @return bool       true if successfully executed uninstall of module, false if not
+ * @noinspection GrazieInspection
  */
-function xoops_module_uninstall_about(\XoopsModule $module)
+function xoops_module_uninstall_about(\XoopsModule $module): bool
 {
     $moduleDirName = $module->dirname();
-    $helper  = Helper::getInstance();
-    $utility = new Utility();
+    $helper        = Helper::getInstance();
+    $utility       = new Utility();
 
     $success = true;
     $helper->loadLanguage('admin');

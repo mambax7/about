@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace XoopsModules\About;
 
@@ -18,8 +18,7 @@ namespace XoopsModules\About;
 /**
  * Module:  About
  *
- * @package      ::    \module\About\class
- * @license      http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @license      https://www.fsf.org/copyleft/gpl.html GNU public license
  * @copyright    https://xoops.org 2001-2017 &copy; XOOPS Project
  * @author       ZySpec <zyspec@yahoo.com>
  * @author       Mamba <mambax7@gmail.com>
@@ -27,11 +26,9 @@ namespace XoopsModules\About;
  */
 
 use XoopsModules\About;
-use XoopsModules\About\Common;
-use XoopsModules\About\Constants;
 
-require_once dirname(__DIR__) . '/include/vars.php';
-define($GLOBALS['artdirname'] . '_FUNCTIONS_RENDER_LOADED', true);
+require_once \dirname(__DIR__) . '/include/vars.php';
+\define($GLOBALS['artdirname'] . '_FUNCTIONS_RENDER_LOADED', true);
 
 /**
  * Class Utility
@@ -45,7 +42,7 @@ class Utility extends Common\SysUtility
      * @param bool  $recursive
      * @return bool
      */
-    public static function aboutmkdirs($dir, $mode = 0777, $recursive = true)
+    public static function aboutmkdirs($dir, int $mode = 0777, bool $recursive = true)
     {
         if ('' === $dir || null === $dir) {
             return $dir;
@@ -66,23 +63,23 @@ class Utility extends Common\SysUtility
      *
      * @param mixed      $page
      * @param null|mixed $style
-     * @return string template file name, using default style if style is invalid
+     * @return string|null template file name, using default style if style is invalid
      */
-    public static function getTemplate($page = 'index', $style = null)
+    public static function getTemplate($page = 'index', $style = null): ?string
     {
         global $xoops;
 
         $template_dir = $xoops->path("modules/{$GLOBALS['artdirname']}/templates/");
         $style        = null === $style ? '' : '_' . $style;
         $file_name    = "{$GLOBALS['artdirname']}_{$page}{$style}.tpl";
-        if (file_exists($template_dir . $file_name)) {
+        if (\file_exists($template_dir . $file_name)) {
             return $file_name;
         }
         // Couldn't find file, try to see if the "default" style for this page exists
         if (!empty($style)) {
             $style     = '';
             $file_name = "{$GLOBALS['artdirname']}_{$page}{$style}.tpl";
-            if (file_exists($template_dir . $file_name)) {
+            if (\file_exists($template_dir . $file_name)) {
                 return $file_name;
             }
         }
@@ -95,16 +92,16 @@ class Utility extends Common\SysUtility
      * Function to get a list of template files of a page, indexed by file name
      *
      *
-     * @param mixed     $page
-     * @param bool $refresh recreate the data
+     * @param mixed $page
+     * @param bool  $refresh recreate the data
      * @return array
      */
-    public static function getTemplateList($page = 'index', $refresh = false)
+    public static function getTemplateList($page = 'index', bool $refresh = false): array
     {
         $tplFiles = self::getTplPageList($page, $refresh);
         $template = [];
-        if ($tplFiles && is_array($tplFiles)) {
-            foreach (array_keys($tplFiles) as $temp) {
+        if ($tplFiles && \is_array($tplFiles)) {
+            foreach (\array_keys($tplFiles) as $temp) {
                 $template[$temp] = $temp;
             }
         }
@@ -119,14 +116,14 @@ class Utility extends Common\SysUtility
      *
      *
      * @param mixed $style
-     * @return string file URL, false if not found
+     * @return string|false file URL, false if not found
      */
     public static function getCss($style = 'default')
     {
         global $xoops;
 
-        if (is_readable($xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . mb_strtolower($style) . '.css'))) {
-            return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . mb_strtolower($style) . '.css', true);
+        if (\is_readable($xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . \mb_strtolower($style) . '.css'))) {
+            return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . \mb_strtolower($style) . '.css', true);
         }
 
         return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style.css', true);
@@ -139,7 +136,7 @@ class Utility extends Common\SysUtility
      * @param mixed $style
      * @return string
      */
-    public static function getModuleHeader($style = 'default')
+    public static function getModuleHeader($style = 'default'): string
     {
         $xoops_module_header = '<link rel="stylesheet" type="text/css" href="' . self::getCss($style) . '">';
 
@@ -152,9 +149,9 @@ class Utility extends Common\SysUtility
      *
      * @param mixed $page
      * @param bool  $refresh
-     * @return array
+     * @return array|null
      */
-    public static function &getTplPageList($page = '', $refresh = true)
+    public static function &getTplPageList($page = '', bool $refresh = true): ?array
     {
         $list = null;
 
@@ -164,11 +161,11 @@ class Utility extends Common\SysUtility
         $list = mod_loadCacheFile($cache_file, $GLOBALS["artdirname"]);
         */
 
-        xoops_load('xoopscache');
+        \xoops_load('xoopscache');
         $key  = $GLOBALS['artdirname'] . "_{$cache_file}";
         $list = \XoopsCache::read($key);
 
-        if (!is_array($list) || $refresh) {
+        if (!\is_array($list) || $refresh) {
             $list = self::template_lookup(!empty($page));
         }
 
@@ -181,7 +178,7 @@ class Utility extends Common\SysUtility
      * @param bool $index_by_page
      * @return array
      */
-    public static function &template_lookup($index_by_page = false)
+    public static function &template_lookup(bool $index_by_page = false): array
     {
         require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
 
@@ -189,7 +186,7 @@ class Utility extends Common\SysUtility
         $list  = [];
         foreach ($files as $file => $name) {
             // The valid file name must be: art_article_mytpl.html OR art_category-1_your-trial.html
-            if (preg_match('/^' . $GLOBALS['artdirname'] . "_([^_]*)(_(.*))?\.(tpl|xotpl)$/i", $name, $matches)) {
+            if (\preg_match('/^' . $GLOBALS['artdirname'] . '_([^_]*)(_(.*))?\.(tpl|xotpl)$/i', $name, $matches)) {
                 if (empty($matches[1])) {
                     continue;
                 }
@@ -205,7 +202,7 @@ class Utility extends Common\SysUtility
         }
 
         $cache_file = empty($index_by_page) ? 'template-list' : 'template-page';
-        xoops_load('xoopscache');
+        \xoops_load('xoopscache');
         $key = $GLOBALS['artdirname'] . "_{$cache_file}";
         \XoopsCache::write($key, $list);
 
@@ -213,5 +210,4 @@ class Utility extends Common\SysUtility
         //mod_createCacheFile($list, $cache_file, $GLOBALS["artdirname"]);
         return $list;
     }
-
 }

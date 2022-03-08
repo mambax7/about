@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * You may not change or alter any portion of this comment or credits
  * of supporting developers from this source code or any supporting source code
@@ -11,16 +11,14 @@
 
 /**
  * @copyright    XOOPS Project (https://xoops.org)
- * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
- * @package
+ * @license      GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author       XOOPS Development Team
  */
 
 use Xmf\Module\Admin;
-use XoopsModules\About;
 use XoopsModules\About\Constants;
-use XoopsModules\About\PageHandler;
 use XoopsModules\About\Helper;
+use XoopsModules\About\PageHandler;
 use XoopsModules\About\Utility;
 
 /** @var Helper $helper */

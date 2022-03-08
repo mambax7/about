@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace XoopsModules\About;
 
@@ -12,10 +12,9 @@ namespace XoopsModules\About;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
+ * @copyright      The XOOPS Co.Ltd. https://www.xoops.com.cn
  * @copyright      XOOPS Project (https://xoops.org)
- * @license        GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
- * @package        about
+ * @license        GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
@@ -43,7 +42,7 @@ class PageHandler extends \XoopsPersistableObjectHandler
      * @param array  $tags
      * @return array
      */
-    public function getTrees($pid = 0, $prefix = '--', array $tags = [])
+    public function getTrees(int $pid = 0, string $prefix = '--', array $tags = []): array
     {
         $pid = (int)$pid;
         if (!\is_array($tags) || 0 === \count($tags)) {
@@ -69,11 +68,11 @@ class PageHandler extends \XoopsPersistableObjectHandler
 
     /**
      * @param array $pages
-     * @param int   $key
-     * @param int   $level
+     * @param int $key
+     * @param int $level
      * @return array|bool
      */
-    public function menuTree(array $pages = [], $key = 0, $level = 1)
+    public function menuTree(array $pages = [], int $key = 0, int $level = 1)
     {
         $ret = false;
         if (!\is_array($pages) || 0 === \count($pages)) {
@@ -97,10 +96,10 @@ class PageHandler extends \XoopsPersistableObjectHandler
 
     /**
      * @param array $pages
-     * @param int   $key
+     * @param int $key
      * @return array|bool
      */
-    public function getBread(array $pages = [], $key = 0)
+    public function getBread(array $pages = [], int $key = 0)
     {
         if (!\is_array($pages) || 0 === \count($pages)) {
             return false;

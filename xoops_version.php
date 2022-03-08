@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
  * About
  *
@@ -9,9 +10,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
+ * @copyright      The XOOPS Co.Ltd. https://www.xoops.com.cn
  * @copyright      XOOPS Project (https://xoops.org)
- * @license        GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
+ * @license        GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
@@ -22,37 +23,33 @@ use XoopsModules\About\Utility;
 
 require_once __DIR__ . '/preloads/autoloader.php';
 
-$moduleDirName = basename(__DIR__);
+$moduleDirName      = basename(__DIR__);
+$moduleDirNameUpper = \mb_strtoupper($moduleDirName);
 
-$modversion['version']       = 1.07;
-$modversion['module_status'] = 'Beta 1';
-$modversion['release_date']  = '2021/01/26';
-$modversion['name']          = _MI_ABOUT_NAME;
-$modversion['description']   = _MI_ABOUT_DESC;
-$modversion['author']        = 'Magic.Shao, ezsky, Mamba, Zyspec';
-$modversion['credits']       = 'xoops.org.cn';
-$modversion['help']          = 'page=help';
-$modversion['license']       = 'GNU GPL 2.0 or later';
-$modversion['license_url']   = 'www.gnu.org/licenses/gpl-2.0.html';
-
-//$moduleDirName = basename(__DIR__);
-
+$modversion['version']             = '1.7.0';
+$modversion['module_status']       = 'Beta 1';
+$modversion['release_date']        = '2021/01/26';
+$modversion['name']                = _MI_ABOUT_NAME;
+$modversion['description']         = _MI_ABOUT_DESC;
+$modversion['author']              = 'Magic.Shao, ezsky, Mamba, Zyspec';
+$modversion['credits']             = 'xoops.org.cn';
+$modversion['help']                = 'page=help';
+$modversion['license']             = 'GNU GPL 2.0 or later';
+$modversion['license_url']         = 'www.gnu.org/licenses/gpl-2.0.html';
 $modversion['dirname']             = $moduleDirName;
 $modversion['modicons16']          = 'assets/images/icons/16';
 $modversion['modicons32']          = 'assets/images/icons/32';
 $modversion['module_website_url']  = 'www.xoops.org';
 $modversion['module_website_name'] = 'XOOPS';
-$modversion['min_php']             = '7.2';
+$modversion['min_php']             = '7.4';
 $modversion['min_xoops']           = '2.5.10';
 $modversion['min_admin']           = '1.2';
 $modversion['min_db']              = ['mysql' => '5.5'];
-
-$modversion['image'] = 'assets/images/logoModule.png';
-$modversion['hasAdmin']    = 1;
-$modversion['system_menu'] = 1;
-$modversion['adminindex']  = 'admin/index.php';
-$modversion['adminmenu']   = 'admin/menu.php';
-
+$modversion['image']               = 'assets/images/logoModule.png';
+$modversion['hasAdmin']            = 1;
+$modversion['system_menu']         = 1;
+$modversion['adminindex']          = 'admin/index.php';
+$modversion['adminmenu']           = 'admin/menu.php';
 // Is performing module install/update?
 $isModuleAction            = (!empty($_POST['fct']) && 'modulesadmin' === $_POST['fct']);
 $modversion['onInstall']   = 'include/action.module.php';
@@ -65,26 +62,22 @@ global $xoopsModuleConfig, $xoopsUser, $xoopsModule;
 
 //sql
 $modversion['sqlfile']['mysql'] = 'sql/mysql.sql';
-$modversion['tables']           = [
-    'about_page',
-];
+$modversion['tables']           = ['about_page',];
 
-/**
- * Templates
- */
+// ------------------- Templates ------------------- //
 if ($isModuleAction) {
-//    require_once __DIR__ . '/include/functions.render.php';
+    //    require_once __DIR__ . '/include/functions.render.php';
     $modversion['templates'] = &Utility::getTplPageList('', true);
 }
 
-//$modversion['templates'][] = [
+//$modversion['templates'] = [
 //    ['file' => 'about_admin_page.tpl', 'description' => ''],
 //    ['file' => 'about_list.tpl', 'description' => ''],
 //    ['file' => 'about_menu.tpl', 'description' => ''],
 //    ['file' => 'about_page.tpl', 'description' => ''],
 //];
 
-// Blocks
+// ------------------- Blocks ------------------- //
 $modversion['blocks'][] = [
     'file'        => 'blocks.php',
     'name'        => _MI_ABOUT_ABOUTUS,

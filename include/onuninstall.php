@@ -1,10 +1,11 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
  * uninstall.php - cleanup on module uninstall
  *
  * @author          XOOPS Module Development Team
  * @copyright       {@link https://xoops.org 2001-2016 XOOPS Project}
- * @license         {@link http://www.fsf.org/copyleft/gpl.html GNU public license}
+ * @license         {@link https://www.fsf.org/copyleft/gpl.html GNU public license}
  * @link            https://xoops.org XOOPS
  */
 
@@ -15,14 +16,14 @@ use XoopsModules\About\{
 
 /** @var Helper $helper */
 /** @var Utility $utility */
-    
+
 /**
  * Prepares system prior to attempting to uninstall module
  * @param \XoopsModule $module {@link XoopsModule}
  *
  * @return bool true if ready to uninstall, false if not
  */
-function xoops_module_pre_uninstall_about(\XoopsModule $module)
+function xoops_module_pre_uninstall_about(\XoopsModule $module): bool
 {
     // Do some synchronization
     return true;
@@ -34,14 +35,14 @@ function xoops_module_pre_uninstall_about(\XoopsModule $module)
  *
  * @return bool true if uninstallation successful, false if not
  */
-function xoops_module_uninstall_about(\XoopsModule $module)
+function xoops_module_uninstall_about(\XoopsModule $module): bool
 {
     //    return true;
 
-    require_once dirname(__DIR__) . '/preloads/autoloader.php';
-    $moduleDirName = basename(dirname(__DIR__));
+    require_once \dirname(__DIR__) . '/preloads/autoloader.php';
+    $moduleDirName = \basename(\dirname(__DIR__));
 
-    $helper = Helper::getInstance();
+    $helper  = Helper::getInstance();
     $utility = new Utility();
 
     $success = true;

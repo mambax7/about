@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /*
  * You may not change or alter any portion of this comment or credits of
  * supporting developers from this source code or any supporting source code
@@ -13,23 +13,29 @@
 /**
  * Create and display the Administration Header for pages
  *
- * @package      module\About\admin
  * @copyright    https://xoops.org 2001-2017 XOOPS Project
- * @license      GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
+ * @license      GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @author       XOOPS Module Development Team
  */
 
+use Xmf\Module\Admin;
 use XoopsModules\About\Helper;
-/** @var Helper $helper */
 
-$moduleDirName = basename(dirname(__DIR__));
-require_once dirname(__DIR__, 3) . '/include/cp_header.php';
-require_once dirname(__DIR__) . '/include/common.php';
+/** @var Admin $adminObject */
+/** @var Helper $helper */
+require \dirname(__DIR__) . '/preloads/autoloader.php';
+
+require \dirname(__DIR__, 3) . '/include/cp_header.php';
+require_once \dirname(__DIR__) . '/include/common.php';
+
+$moduleDirName = \basename(\dirname(__DIR__));
 
 xoops_load('xoopsformloader');
 
 $helper = Helper::getInstance();
 $myts   = \MyTextSanitizer::getInstance();
+
+$adminObject = Admin::getInstance();
 
 if (!isset($GLOBALS['xoopsTpl']) || !($GLOBALS['xoopsTpl'] instanceof \XoopsTpl)) {
     require_once $GLOBALS['xoops']->path('class/template.php');

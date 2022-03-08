@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
  * About
  *
@@ -9,21 +10,20 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
+ * @copyright      The XOOPS Co.Ltd. https://www.xoops.com.cn
  * @copyright      XOOPS Project (https://xoops.org)
- * @license        GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
+ * @license        GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
  */
 
 use Xmf\Request;
-use  Xmf\Module\Admin;
 use XoopsModules\About\Constants;
 use XoopsModules\About\PageHandler;
-/** @var \XoopsModules\About\PageHandler $pageHandler */
-/** @var Helper $helper */
 
+/** @var PageHandler $pageHandler */
+/** @var Helper $helper */
 require_once __DIR__ . '/admin_header.php';
 
 xoops_cp_header();
@@ -35,7 +35,7 @@ $op      = Request::getCmd('op', null);
 $op      = $op ?? (isset($_REQUEST['id']) ? 'edit' : 'list');
 $page_id = Request::getInt('id', null);
 
-//$pageHandler = new About\PageHandler();
+//$pageHandler = new PageHandler();
 
 switch ($op) {
     default:
@@ -45,8 +45,8 @@ switch ($op) {
             $page_order = Request::getArray('page_order', [], 'POST'); //$_POST['page_order'];
             foreach ($page_order as $page_id => $order) {
                 $pageObj = $pageHandler->get($page_id);
-                if ($page_order[$page_id] != $pageObj->getVar('page_order')) {
-                    $pageObj->setVar('page_order', $page_order[$page_id]);
+                if ($order != $pageObj->getVar('page_order')) {
+                    $pageObj->setVar('page_order', $order);
                     $pageHandler->insert($pageObj);
                 }
                 unset($pageObj);

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * About
  *
@@ -9,10 +9,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
+ * @copyright      The XOOPS Co.Ltd. https://www.xoops.com.cn
  * @copyright      XOOPS Project (https://xoops.org)
- * @license        GNU GPL 2 or later (https://www.gnu.org/licenses/gpl-2.0.html)
- * @package        about
+ * @license        GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
@@ -20,7 +19,7 @@
 
 // _LANGCODE: zh-CN
 // _CHARSET : utf-8
-// Translator: ezsky, http://www.ezsky.org
+// Translator: ezsky, https://www.ezsky.org
 
 //xoops_version  add   menu
 define('_MI_ABOUT_NAME', 'About Us');
