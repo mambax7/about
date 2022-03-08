@@ -15,7 +15,7 @@
 
 use Xmf\Module\Admin;
 use Xmf\Request;
-use XoopsModules\xxxxx\{
+use XoopsModules\About\{
     Common\Blocksadmin,
     Helper
 };
