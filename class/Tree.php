@@ -91,7 +91,7 @@ if (!\class_exists('About\Tree')) {
         }
 
         /**
-         * @param       $key
+         * @param int   $key
          * @param mixed $ret
          * @param array $tags
          * @param int   $depth
@@ -120,9 +120,9 @@ if (!\class_exists('About\Tree')) {
         }
 
         /**
-         * @param int  $key
-         * @param null $tags
-         * @param int  $depth
+         * @param int        $key
+         * @param array|null $tags
+         * @param int        $depth
          * @return array
          */
         public function makeArrayTree(int $key = 0, $tags = null, int $depth = 0): array
@@ -131,7 +131,11 @@ if (!\class_exists('About\Tree')) {
             if ($depth > 0) {
                 $depth++;
             }
-            $this->getAllChildArray($key, $ret, $tags, $depth);
+            if (isset($tags)) {
+                $this->getAllChildArray($key, $ret, $tags, $depth);
+            } else {
+                $this->getAllChildArray($key, $ret, [], $depth);
+            }
 
             return $ret;
         }

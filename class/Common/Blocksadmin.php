@@ -32,7 +32,7 @@ class Blocksadmin
      */
     public $db;
     /**
-     * @var \XoopsModules\Tag\Helper
+     * @var Helper
      */
     public $helper;
     /**

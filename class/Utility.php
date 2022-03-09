@@ -138,7 +138,7 @@ class Utility extends Common\SysUtility
      */
     public static function getModuleHeader($style = 'default'): string
     {
-        $xoops_module_header = '<link rel="stylesheet" type="text/css" href="' . self::getCss($style) . '">';
+        $xoops_module_header = sprintf('<link rel="stylesheet" type="text/css" href="%s">', self::getCss($style));
 
         return $xoops_module_header;
     }

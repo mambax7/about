@@ -38,7 +38,7 @@ $helper->loadLanguage('feedback');
 $pathIcon32    = Admin::menuIconPath('');
 $pathModIcon32 = XOOPS_URL . '/modules/' . $moduleDirName . '/assets/images/icons/32/';
 if (is_object($helper->getModule()) && false !== $helper->getModule()->getInfo('modicons32')) {
-    $pathModIcon32 = $helper->url($helper->getModule()->getInfo('modicons32'));
+    $pathModIcon32 = $helper->url((string)$helper->getModule()->getInfo('modicons32'));
 }
 
 $adminmenu = [
