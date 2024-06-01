@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ruleset name="XOOPS">
+    <description>XOOPS Coding Standards</description>
+
+    <!-- Include the Generic Coding Standard -->
+    <rule ref="PSR12"/>
+
+    <!-- Custom XOOPS rules or adjustments -->
+<!--    <rule ref="Generic.Files.LineLength">-->
+<!--        <properties>-->
+<!--            <property name="lineLimit" value="120"/>-->
+<!--            <property name="absoluteLineLimit" value="150"/>-->
+<!--        </properties>-->
+<!--    </rule>-->
+
+    <!-- Exclude specific patterns or directories -->
+    <exclude-pattern>vendor/</exclude-pattern>
+    <exclude-pattern>tests/</exclude-pattern>
+
+    <!-- Define directories to include -->
+<!--    <file>src/</file>-->
+<!--    <file>modules/</file>-->
+<!--    <file>class/</file>-->
+<!--    <file>include/</file>-->
+<!--    <file>language/</file>-->
+<!--    <file>templates/</file>-->
+
+    <!-- Additional configuration options -->
+    <arg name="colors"/>
+    <arg name="p"/>
+</ruleset>

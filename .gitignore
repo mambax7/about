@@ -3,3 +3,9 @@
 \#*
 *.bak
 .idea/
+build/
+vendor/
+composer.lock
+*.neon
+*.cache
+phpunit.xml
