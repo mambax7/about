@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
  * About
  *
@@ -9,23 +10,29 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
+ * @copyright      The XOOPS Co.Ltd. https://www.xoops.com.cn
  * @copyright      XOOPS Project (https://xoops.org)
- * @license        GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @package        about
+ * @license        GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @since          1.0.0
  * @author         Mengjue Shao <magic.shao@gmail.com>
  * @author         Susheng Yang <ezskyyoung@gmail.com>
  */
 
+use XoopsModules\About;
+use XoopsModules\About\Helper;
+
+/** @var Helper $helper */
 $moduleDirName = basename(__DIR__);
-require_once __DIR__ . '/../../mainfile.php';
+require_once \dirname(__DIR__, 2) . '/mainfile.php';
 
-$abtHelper = Xmf\Module\Helper::getHelper($moduleDirName);
+require_once __DIR__ . '/include/common.php';
 
-xoops_load('constants', $moduleDirName);
-$abtHelper->loadLanguage('modinfo');
+//$helper = \XoopsModules\AboutHelper::getInstance();
 
-$xoBreadcrumbs = array(array('title' => _YOURHOME, 'link' => XOOPS_URL),
-                       array('title' => $xoopsModule->getVar('name'), 'link' => XOOPS_URL . "/modules/{$moduleDirName}/")
-);
+$helper->loadLanguage('modinfo');
+
+/** @var \XoopsModule $xoopsModule */
+$xoBreadcrumbs = [
+    ['title' => _YOURHOME, 'link' => XOOPS_URL],
+    ['title' => $xoopsModule->getVar('name'), 'link' => XOOPS_URL . "/modules/{$moduleDirName}/"],
+];

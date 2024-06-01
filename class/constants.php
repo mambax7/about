@@ -1,8 +1,11 @@
-<?php
+<?php declare(strict_types=1);
+
+namespace XoopsModules\About;
+
 /*
                XOOPS - PHP Content Management System
                    Copyright (c) 2000 XOOPS.org
-                      <http://www.xoops.org/>
+                      <https://xoops.org>
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
@@ -22,6 +25,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 */
+
 /**
  * About module
  *
@@ -29,108 +33,105 @@
  * used to make the code easier to read and to keep values in central
  * location if they need to be changed.  These should not normally need
  * to be modified. If they are to be modified it is recommended to change
- * the value(s) before module installation. Additionally the module may not
+ * the value(s) before module installation. Additionally, the module may not
  * work correctly if trying to upgrade if these values have been changed.
  *
- * @copyright::  {@link http://sourceforge.net/projects/xoops/ The XOOPS Project}
- * @license::    {@link http://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
- * @author::     zyspec <owners@zyspec.com>
- * @package::    about
- * @since::      1.05
+ * @copyright::  {@link https://xoops.org/ The XOOPS Project}
+ * @license  ::    {@link https://www.gnu.org/licenses/gpl-2.0.html GNU Public License}
+ * @author   ::     zyspec <zyspec@yahoo.com>
+ * @since    ::      1.05
  **/
 
-defined('XOOPS_ROOT_PATH') || exit('Restricted access.');
-
 /**
- * Interface AboutConstants
+ * interface Constants
  */
-interface AboutConstants
+interface Constants
 {
-/**#@+
- * Constant definition
- */
+    /**#@+
+     * Constant definition
+     */
     /**
      * display - page
      */
-    const PAGE = 1;
+    public const PAGE = 1;
     /**
      * display - category
      */
-    const CATEGORY = 2;
+    public const CATEGORY = 2;
     /**
      * published
      */
     /**
      * Page - page type
      */
-    const PAGE_TYPE_PAGE = 1;
+    public const PAGE_TYPE_PAGE = 1;
     /**
      * Link - page type
      */
-    const PAGE_TYPE_LINK = 2;
+    public const PAGE_TYPE_LINK = 2;
     /**
      * published
      */
-    const PUBLISHED = 1;
+    public const PUBLISHED = 1;
     /**
      * not published (draft)
      */
-    const NOT_PUBLISHED = 0;
+    public const NOT_PUBLISHED = 0;
     /**
      * display in menu
      */
-    const IN_MENU = 1;
+    public const IN_MENU = 1;
     /**
      * do not display in menu
      */
-    const NOT_IN_MENU = 0;
+    public const NOT_IN_MENU = 0;
     /**
      * Invalid ID
      */
-    const INVALID_ID = 0;
+    public const INVALID_ID = 0;
     /**
      * default ereg size
      */
-    const DEFAULT_EREG = 500;
+    public const DEFAULT_EREG = 500;
     /**
      * default index for menu page
      */
-    const DEFAULT_INDEX = 1;
+    public const DEFAULT_INDEX = 1;
     /**
      * not index
      */
-    const NOT_INDEX = 0;
+    public const NOT_INDEX = 0;
     /**
      * no delay XOOPS redirect delay (in seconds)
      */
-    const REDIRECT_DELAY_NONE = 0;
+    public const REDIRECT_DELAY_NONE = 0;
     /**
      * short XOOPS redirect delay (in seconds)
      */
-    const REDIRECT_DELAY_SHORT = 1;
+    public const REDIRECT_DELAY_SHORT = 1;
     /**
      * medium XOOPS redirect delay (in seconds)
      */
-    const REDIRECT_DELAY_MEDIUM = 3;
+    public const REDIRECT_DELAY_MEDIUM = 3;
     /**
      * long XOOPS redirect delay (in seconds)
      */
-    const REDIRECT_DELAY_LONG = 7;
+    public const REDIRECT_DELAY_LONG = 7;
     /**
      * confirm not ok to take action
      */
-    const CONFIRM_NOT_OK = 0;
+    public const CONFIRM_NOT_OK = 0;
     /**
      * confirm ok to take action
      */
-    const CONFIRM_OK = 1;
+    public const CONFIRM_OK = 1;
     /**
      * Set flag
      */
-    const SET = 1;
+    public const SET = 1;
     /**
      * Unset flag
      */
-    const NOT_SET = 0;
-/**#@-*/
+    public const NOT_SET = 0;
+    /**#@-*/
 }

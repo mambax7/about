@@ -6,15 +6,16 @@
 
     -->
 </style>
-<img src="../assets/images/page_add.png">
+
+<img src="<{$mod_url}>/assets/images/page_add.png">
 <a href="admin.page.php?op=new&amp;type=1"><{$smarty.const._AM_ABOUT_PAGE_INSERT}></a>
-<img src="../assets/images/link_add.png">
+<img src="<{$mod_url}>/assets/images/link_add.png">
 <a href="admin.page.php?op=new&amp;type=2"><{$smarty.const._AM_ABOUT_INSERT_LINK}></a>
 
 <br> <br>
 
 <form id="form" name="form" method="post" action="admin.page.php">
-    <{securityToken}><{*//mb*}>
+    <{securityToken}>
     <table id="about-pageList" class="outer">
         <th width="5%" class="center"><{$smarty.const._AM_ABOUT_PAGE_MENU_ORDER}></th>
         <th width="4%" class="center"><{$smarty.const._AM_ABOUT_PAGE_CUS_INDEX}></th>
@@ -26,10 +27,10 @@
         <th width="15%" class="center"><{$smarty.const._AM_ABOUT_TIME}></th>
         <th width="10%" class="center"><{$smarty.const._AM_ABOUT_PAGE_AUTHOR}></th>
 
-        <{foreach item=page from=$pages}>
+        <{foreach item=page from=$pages|default:null}>
             <tr class="<{cycle values='odd, even'}> center top">
                 <td><input name="page_order[<{$page.page_id}>]" type="text" id="<{$page.page_id}>" value="<{$page.page_order}>" size="1" maxlength="4"></td>
-                <td><input name="page_index" type="radio" value="<{$page.page_id}>" id="<{$page.page_id}>" <{if $page.page_index}>checked="checked"<{/if}>></td>
+                <td><input name="page_index" type="radio" value="<{$page.page_id}>" id="<{$page.page_id}>" <{if $page.page_index}>checked<{/if}>></td>
                 <td align="left">
                     <div><a href="admin.page.php?id=<{$page.page_id}>"><{$page.page_menu_title}></a></div>
                     <div class="options" style="padding:5px 0 0 0;">
@@ -40,13 +41,13 @@
                 </td>
                 <td><{$page.page_tpl}></td>
                 <td class="center">
-                    <{if $page.page_type eq 1}><img src="../assets/images/page.png"><{else}><img src="../assets/images/page_link.png"><{/if}>
+                    <{if $page.page_type == 1}><img src="<{$mod_url}>/assets/images/page.png"><{else}><img src="<{$mod_url}>/assets/images/page_link.png"><{/if}>
                 </td>
                 <td class="center">
-                    <{if $page.page_status eq 1}><img src="../assets/images/accept.png"><{else}><img src="../assets/images/delete.png"><{/if}>
+                    <{if $page.page_status == 1}><img src="<{$mod_url}>/assets/images/accept.png"><{else}><img src="<{$mod_url}>/assets/images/delete.png"><{/if}>
                 </td>
                 <td class="center">
-                    <{if $page.page_menu_status}><img src="../assets/images/tick.png"><{else}><img src="../assets/images/disabled.png"><{/if}>
+                    <{if $page.page_menu_status}><img src="<{$mod_url}>/assets/images/tick.png"><{else}><img src="<{$mod_url}>/assets/images/disabled.png"><{/if}>
                 </td>
                 <td class="center"><{$page.page_pushtime}></td>
                 <td><{$page.page_author}></td>

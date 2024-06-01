@@ -1,4 +1,7 @@
-<?php
+<?php declare(strict_types=1);
+
+namespace XoopsModules\About;
+
 /**
  * About
  *
@@ -9,25 +12,21 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
- * @copyright      The XOOPS Co.Ltd. http://www.xoops.com.cn
+ * @copyright      The XOOPS Co.Ltd. https://www.xoops.com.cn
  * @copyright      XOOPS Project (https://xoops.org)
- * @license        GNU GPL 2 or later (http://www.gnu.org/licenses/gpl-2.0.html)
- * @package        about
+ * @license        GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @since          1.0.0
  * @author         Susheng Yang <ezskyyoung@gmail.com>
  */
-
-defined('XOOPS_ROOT_PATH') || exit('Restricted access.');
-
-include_once XOOPS_ROOT_PATH . '/class/xoopsform/form.php';
+require_once XOOPS_ROOT_PATH . '/class/xoopsform/form.php';
 
 /**
- * Class AboutBlockForm
+ * Class BlockForm
  */
-class AboutBlockForm extends XoopsForm
+class BlockForm extends \XoopsForm
 {
     /**
-     * AboutBlockForm constructor.
+     * BlockForm constructor.
      */
     public function __construct()
     {
@@ -35,18 +34,16 @@ class AboutBlockForm extends XoopsForm
 
     /**
      * create HTML to output the form as a table
-     *
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         $ret    = '<div>';
         $hidden = '';
         foreach ($this->getElements() as $ele) {
-            if (!is_object($ele)) {
+            if (!\is_object($ele)) {
                 $ret .= $ele;
             } elseif (!$ele->isHidden()) {
-                if (($caption = $ele->getCaption()) !== '') {
+                if ('' !== ($caption = $ele->getCaption())) {
                     $ret .= "<div class='xoops-form-element-caption" . ($ele->isRequired() ? '-required' : '') . "'>" . "<span class='caption-text'><strong>{$caption}</strong></span>" . "<span class='caption-marker'>*</span>" . '</div>';
                 }
 

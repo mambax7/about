@@ -1,7 +1,8 @@
-<?php
-/*
- About Utility Class Definition
+<?php declare(strict_types=1);
 
+namespace XoopsModules\About;
+
+/*
  You may not change or alter any portion of this comment or credits of
  supporting developers from this source code or any supporting source code
  which is considered copyrighted (c) material of the original comment or credit
@@ -11,267 +12,187 @@
  WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
+
 /**
- * Module:  About
  *
- * @package      ::    \module\about\class
- * @license      http://www.fsf.org/copyleft/gpl.html GNU public license
+ * @license      GNU GPL 2.0 or later (https://www.gnu.org/licenses/gpl-2.0.html)
  * @copyright    https://xoops.org 2001-2017 &copy; XOOPS Project
- * @author       ZySpec <owners@zyspec.com>
+ * @author       ZySpec <zyspec@yahoo.com>
  * @author       Mamba <mambax7@gmail.com>
- * @since        ::      File available since version 1.54
  */
+
+use Xmf\Module\Admin;
+use XoopsModules\About;
+
+require_once \dirname(__DIR__) . '/include/vars.php';
+\define($GLOBALS['artdirname'] . '_FUNCTIONS_RENDER_LOADED', true);
 
 /**
- * AboutUtility
- *
- * Static utility class to provide common functionality
- *
+ * Class Utility
  */
-class AboutUtility
+class Utility extends Common\SysUtility
 {
+    //--------------- Custom module methods -----------------------------
     /**
-     *
-     * Verifies XOOPS version meets minimum requirements for this module
-     * @static
-     * @param XoopsModule $module
-     * @param null|string $requiredVer
-     *
-     * @return bool true if meets requirements, false if not
+     * @param       $dir
+     * @return bool
      */
-    public static function checkVerXoops(XoopsModule $module = null, $requiredVer = null)
+    public static function aboutmkdirs($dir, int $mode = 0777, bool $recursive = true)
     {
-        $moduleDirName = basename(dirname(__DIR__));
-        if (null === $module) {
-            $module = XoopsModule::getByDirname($moduleDirName);
+        if ('' === $dir || null === $dir) {
+            return $dir;
         }
-        xoops_loadLanguage('admin', $moduleDirName);
-        //check for minimum XOOPS version
-        $currentVer = substr(XOOPS_VERSION, 6); // get the numeric part of string
-        $currArray  = explode('.', $currentVer);
-        if (null === $requiredVer) {
-            $requiredVer = '' . $module->getInfo('min_xoops'); //making sure it's a string
+        if ('/' === $dir || \is_dir($dir)) {
+            return $dir;
         }
-        $reqArray = explode('.', $requiredVer);
-        $success  = true;
-        foreach ($reqArray as $k => $v) {
-            if (isset($currArray[$k])) {
-                if ($currArray[$k] > $v) {
-                    break;
-                } elseif ($currArray[$k] == $v) {
+        if (static::aboutmkdirs(\dirname((string) $dir), $mode, $recursive)) {
+            return \mkdir($dir, $mode);
+        }
+
+        return $dir;
+    }
+
+    /**
+     * Function to get template file of a specified style of a specified page
+     *
+     *
+     * @param null|mixed $style
+     * @return string|null template file name, using default style if style is invalid
+     * @param mixed $page
+     */
+    public static function getTemplate($page = 'index', $style = null): ?string
+    {
+        global $xoops;
+
+        $template_dir = $xoops->path("modules/{$GLOBALS['artdirname']}/templates/");
+        $style        = null === $style ? '' : '_' . $style;
+        $file_name    = "{$GLOBALS['artdirname']}_{$page}{$style}.tpl";
+        if (\file_exists($template_dir . $file_name)) {
+            return $file_name;
+        }
+        // Couldn't find file, try to see if the "default" style for this page exists
+        if (!empty($style)) {
+            $style     = '';
+            $file_name = "{$GLOBALS['artdirname']}_{$page}{$style}.tpl";
+            if (\file_exists($template_dir . $file_name)) {
+                return $file_name;
+            }
+        }
+
+        // Couldn't find a suitable template for this page
+        return null;
+    }
+
+    /**
+     * Function to get a list of template files of a page, indexed by file name
+     *
+     *
+     * @param bool  $refresh recreate the data
+     * @param mixed $page
+     */
+    public static function getTemplateList($page = 'index', bool $refresh = false): array
+    {
+        $tplFiles = self::getTplPageList($page, $refresh);
+        $template = [];
+        if ($tplFiles && \is_array($tplFiles)) {
+            foreach (\array_keys($tplFiles) as $temp) {
+                $template[$temp] = $temp;
+            }
+        }
+
+        return $template;
+    }
+
+    /**
+     * Function to get CSS file URL of a style
+     *
+     * The hardcoded path is not desirable for theme switch, however, we have to keabout it before getting a good solution for cache
+     *
+     *
+     * @param mixed $style
+     * @return string|false file URL, false if not found
+     */
+    public static function getCss($style = 'default')
+    {
+        global $xoops;
+
+        if (\is_readable($xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . \mb_strtolower((string) $style) . '.css'))) {
+            return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style_' . \mb_strtolower((string) $style) . '.css', true);
+        }
+
+        return $xoops->path('modules/' . $GLOBALS['artdirname'] . '/assets/css/style.css', true);
+    }
+
+    /**
+     * Function to module header for a page with specified style
+     *
+     * @param mixed $style
+     */
+    public static function getModuleHeader($style = 'default'): string
+    {
+        $xoops_module_header = \sprintf('<link rel="stylesheet" type="text/css" href="%s">', self::getCss($style));
+
+        return $xoops_module_header;
+    }
+
+    /**
+     * Function to get a list of template files of a page, indexed by style
+     *
+     * @param mixed $page
+     */
+    public static function getTplPageList($page = '', bool $refresh = true): ?array
+    {
+        $list = null;
+
+        $cache_file = empty($page) ? 'template-list' : 'template-page';
+        /*
+        load_functions("cache");
+        $list = mod_loadCacheFile($cache_file, $GLOBALS["artdirname"]);
+        */
+
+        \xoops_load('xoopscache');
+        $key  = $GLOBALS['artdirname'] . "_{$cache_file}";
+        $list = \XoopsCache::read($key);
+
+        if (!\is_array($list) || $refresh) {
+            $list = self::template_lookup(!empty($page));
+        }
+
+        $ret = empty($page) ? $list : @$list[$page];
+
+        return $ret;
+    }
+
+    public static function &template_lookup(bool $index_by_page = false): array
+    {
+        require_once XOOPS_ROOT_PATH . '/class/xoopslists.php';
+
+        $files = \XoopsLists::getHtmlListAsArray(XOOPS_ROOT_PATH . '/modules/' . $GLOBALS['artdirname'] . '/templates/');
+        $list  = [];
+        foreach ($files as $file => $name) {
+            // The valid file name must be: art_article_mytpl.html OR art_category-1_your-trial.html
+            if (\preg_match('/^' . $GLOBALS['artdirname'] . '_([^_]*)(_(.*))?\.(tpl|xotpl)$/i', (string) $name, $matches)) {
+                if (empty($matches[1])) {
                     continue;
+                }
+                if (empty($matches[3])) {
+                    $matches[3] = 'default';
+                }
+                if (empty($index_by_page)) {
+                    $list[] = ['file' => $name, 'description' => $matches[3]];
                 } else {
-                    $success = false;
-                    break;
-                }
-            } else {
-                if ((int)$v > 0) { // handles versions like x.x.x.0_RC2
-                    $success = false;
-                    break;
+                    $list[$matches[1]][$matches[3]] = $name;
                 }
             }
         }
 
-        if (false === $success) {
-            $module->setErrors(sprintf(_AM_ABOUT_ERROR_BAD_XOOPS, $requiredVer, $currentVer));
-        }
+        $cache_file = empty($index_by_page) ? 'template-list' : 'template-page';
+        \xoops_load('xoopscache');
+        $key = $GLOBALS['artdirname'] . "_{$cache_file}";
+        \XoopsCache::write($key, $list);
 
-        return $success;
-    }
-
-    /**
-     *
-     * Verifies PHP version meets minimum requirements for this module
-     * @static
-     * @param XoopsModule $module
-     *
-     * @return bool true if meets requirements, false if not
-     */
-    public static function checkVerPhp(XoopsModule $module)
-    {
-        xoops_loadLanguage('admin', $module->dirname());
-        // check for minimum PHP version
-        $success = true;
-        $verNum  = PHP_VERSION;
-        $reqVer  = $module->getInfo('min_php');
-        if (false !== $reqVer && '' !== $reqVer) {
-            if (version_compare($verNum, (string)$reqVer, '<')) {
-                $module->setErrors(sprintf(_AM_ABOUT_ERROR_BAD_PHP, $reqVer, $verNum));
-                $success = false;
-            }
-        }
-        return $success;
-    }
-
-
-    /**
-     *
-     * Remove files and (sub)directories
-     *
-     * @param string $src source directory to delete
-     *
-     * @see Xmf\Module\Helper::getHelper()
-     * @see Xmf\Module\Helper::isUserAdmin()
-     *
-     * @return bool true on success
-     */
-    public static function deleteDirectory($src)
-    {
-        // Only continue if user is a 'global' Admin
-        if (!($GLOBALS['xoopsUser'] instanceof XoopsUser) || !$GLOBALS['xoopsUser']->isAdmin()) {
-            return false;
-        }
-
-        $success = true;
-        // remove old files
-        $dirInfo = new SplFileInfo($src);
-        // validate is a directory
-        if ($dirInfo->isDir()) {
-            $fileList = array_diff(scandir($src, SCANDIR_SORT_NONE), array('..', '.'));
-            foreach ($fileList as $k => $v) {
-                $fileInfo = new SplFileInfo("{$src}/{$v}");
-                if ($fileInfo->isDir()) {
-                    // recursively handle subdirectories
-                    if (!$success = self::deleteDirectory($fileInfo->getRealPath())) {
-                        break;
-                    }
-                } else {
-                    // delete the file
-                    if (!($success = unlink($fileInfo->getRealPath()))) {
-                        break;
-                    }
-                }
-            }
-            // now delete this (sub)directory if all the files are gone
-            if ($success) {
-                $success = rmdir($dirInfo->getRealPath());
-            }
-        } else {
-            // input is not a valid directory
-            $success = false;
-        }
-        return $success;
-    }
-
-    /**
-     *
-     * Recursively remove directory
-     *
-     * @todo currently won't remove directories with hidden files, should it?
-     *
-     * @param string $src directory to remove (delete)
-     *
-     * @return bool true on success
-     */
-    public static function rrmdir($src)
-    {
-        // Only continue if user is a 'global' Admin
-        if (!($GLOBALS['xoopsUser'] instanceof XoopsUser) || !$GLOBALS['xoopsUser']->isAdmin()) {
-            return false;
-        }
-
-        // If source is not a directory stop processing
-        if (!is_dir($src)) {
-            return false;
-        }
-
-        $success = true;
-
-        // Open the source directory to read in files
-        $iterator = new DirectoryIterator($src);
-       foreach ($iterator as $fObj) {
-            if ($fObj->isFile()) {
-                $filename = $fObj->getPathname();
-                $fObj = null; // clear this iterator object to close the file
-                if (!unlink($filename)) {
-                    return false; // couldn't delete the file
-                }
-            } elseif (!$fObj->isDot() && $fObj->isDir()) {
-                // Try recursively on directory
-                self::rrmdir($fObj->getPathname());
-            }
-        }
-        $iterator = null;   // clear iterator Obj to close file/directory
-        return rmdir($src); // remove the directory & return results
-    }
-
-    /**
-     * Recursively move files from one directory to another
-     *
-     * @param string $src - Source of files being moved
-     * @param string $dest - Destination of files being moved
-     *
-     * @return bool true on success
-     */
-    public static function rmove($src, $dest)
-    {
-        // Only continue if user is a 'global' Admin
-        if (!($GLOBALS['xoopsUser'] instanceof XoopsUser) || !$GLOBALS['xoopsUser']->isAdmin()) {
-            return false;
-        }
-
-        // If source is not a directory stop processing
-        if (!is_dir($src)) {
-            return false;
-        }
-
-        // If the destination directory does not exist and could not be created stop processing
-        if (!is_dir($dest) && !mkdir($dest, 0755)) {
-            return false;
-        }
-
-        // Open the source directory to read in files
-        $iterator = new DirectoryIterator($src);
-        foreach ($iterator as $fObj) {
-            if ($fObj->isFile()) {
-                rename($fObj->getPathname(), "{$dest}/" . $fObj->getFilename());
-            } elseif (!$fObj->isDot() && $fObj->isDir()) {
-                // Try recursively on directory
-                self::rmove($fObj->getPathname(), "{$dest}/" . $fObj->getFilename());
-//                rmdir($fObj->getPath()); // now delete the directory
-            }
-        }
-        $iterator = null;   // clear iterator Obj to close file/directory
-        return rmdir($src); // remove the directory & return results
-    }
-
-    /**
-     * Recursively copy directories and files from one directory to another
-     *
-     * @param string $src  - Source of files being moved
-     * @param string $dest - Destination of files being moved
-     *
-     * @see Xmf\Module\Helper::getHelper()
-     * @see Xmf\Module\Helper::isUserAdmin()
-     *
-     * @return bool true on success
-     */
-    public static function rcopy($src, $dest)
-    {
-        // Only continue if user is a 'global' Admin
-        if (!($GLOBALS['xoopsUser'] instanceof XoopsUser) || !$GLOBALS['xoopsUser']->isAdmin()) {
-            return false;
-        }
-
-        // If source is not a directory stop processing
-        if (!is_dir($src)) {
-            return false;
-        }
-
-        // If the destination directory does not exist and could not be created stop processing
-        if (!is_dir($dest) && !mkdir($dest, 0755)) {
-            return false;
-        }
-
-        // Open the source directory to read in files
-        $iterator = new DirectoryIterator($src);
-        foreach($iterator as $fObj) {
-            if($fObj->isFile()) {
-                copy($fObj->getPathname(), "{$dest}/" . $fObj->getFilename());
-            } else if(!$fObj->isDot() && $fObj->isDir()) {
-                self::rcopy($fObj->getPathname(), "{$dest}/" . $fObj-getFilename());
-            }
-        }
-        return true;
+        //load_functions("cache");
+        //mod_createCacheFile($list, $cache_file, $GLOBALS["artdirname"]);
+        return $list;
     }
 }
