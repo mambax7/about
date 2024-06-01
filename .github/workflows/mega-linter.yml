@@ -34,11 +34,11 @@ jobs:
 
       - name: Archive production artifacts
         if: ${{ success() }} || ${{ failure() }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: MegaLinter reports
           path: |
-            report
+            .mega-linter-reports
             mega-linter.log
 
       - name: Create Pull Request with applied fixes
